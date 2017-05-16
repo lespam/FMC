@@ -18,6 +18,10 @@ public class Automaton {
     public Automaton() {
         
     }
+    
+        public void addState(State state){
+        states.add(state);
+    }
 
     public List<State> getStates() {
         return states;

@@ -178,61 +178,18 @@ public class ProyectoFinal {
             iteration++;
         }
         
-
-    
-         
-
-                    
-//        System.out.println(partitionsAux.size());
-//        for(int i=0;i<partitionsAux.size();i++){
-//            System.out.println("------");
-//            System.out.println(partitionsAux.get(i).getTag1());
-//            System.out.println(partitionsAux.get(i).getTag2());
-//            System.out.println(partitionsAux.get(i).getStates().size());
-//        }
-//
-//
-//        for(int i=0;i<partitions.size();i++){
-//            partitions.get(i).setTag(i);
-//        }
+        //        System.out.println(partitions.size());
+        Automaton finalAutomaton = new Automaton();
+        for(int i=0;i<partitions.size();i++){
+            finalAutomaton.addState(partitions.get(i).getStates().get(0));
+        }
         
-//        added=false;
-//         for(int i=0;i<partitions.size();i++){//Itera sobre todos las particiones
-//             int j =0;
-//             while(j<partitions.get(i).getStates().size()){//Itera sobre los estados de la particion i
-//                 if(partitionsAux.isEmpty()){//si  particionsaux está vacía crea una partición y la inserta
-//                     partitionsAux.add(new Partition().addState(partitions.get(i).getStates().get(j)));
-//                     //agrega los tags a la particion
-//                     partitionsAux.get(0).setTag1(findTag(partitions,partitions.get(i).getStates().get(j).getTransition0()));
-//                     partitionsAux.get(0).setTag2(findTag(partitions,partitions.get(i).getStates().get(j).getTransition1()));
-//                 }
-//                 else{//sino va a revisar a que parrtición pertenece
-//                     for(int k=0;k<partitionsAux.size();k++){
-//                         //si                          
-//                         if(partitionsAux.get(k).getTag1()==findTag(partitions,partitions.get(i).getStates().get(j).getTransition0())
-//                                 && partitionsAux.get(k).getTag2()==findTag(partitions,partitions.get(i).getStates().get(j).getTransition1())){
-//                             partitionsAux.get(k).addState(partitions.get(i).getStates().get(j));
-//                             added=true;                             
-//                         }
-//                     }
-//                     if(!added){
-//                     //crear nueva particion en partitionsAux y agregar tags
-//                     partitionsAux.add(new Partition().addState(partitions.get(i).getStates().get(j)));
-//                     //agrega tags a particion
-//                     partitionsAux.get(partitionsAux.size()-1).setTag1(findTag(partitions,partitions.get(i).getStates().get(j).getTransition0()));
-//                     partitionsAux.get(partitionsAux.size()-1).setTag2(findTag(partitions,partitions.get(i).getStates().get(j).getTransition1()));
-//                    }
-//                 }
-//                 added=false;
-//                j++;
-//             }     
-//         }
-//        for(int i=0;i<partitionsAux.size();i++){
-//            System.out.println("------");
-//            for(int j=0;j<partitionsAux.get(i).getNames().size();j++){
-//                System.out.println(partitionsAux.get(i).getNames().get(j));
-//            }
-//        }
+        System.out.println("Automata final: ");        
+        for(int i=0;i<finalAutomaton.getStates().size();i++){
+            System.out.println(finalAutomaton.getStates().get(i).toString());
+        }
+
+   
          
     }
     
