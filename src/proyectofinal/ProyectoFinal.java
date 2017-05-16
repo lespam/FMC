@@ -11,10 +11,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 /**
  *
- * @author PC
+ * @author LDVG
  */
 public class ProyectoFinal {
 
@@ -22,6 +24,7 @@ public class ProyectoFinal {
      * @param args the command line arguments
      */
     private static final String FILENAME = "test.txt";
+    private static final String RESULT = "result.txt";
     
     public static int findTag(List<Partition> partList,char state){
         int i=0; boolean found=false;
@@ -77,13 +80,14 @@ public class ProyectoFinal {
         
         boolean added = false;
         for(int i=0;i<automaton.getStates().size();i++){
-            if(partitions.isEmpty()){
+            if(partitions.isEmpty()){ //Si la partición está vacía agrega el primer estado 
                 partitions.add(new Partition().addState(automaton.getStates().get(i)));
-                partitions.get(0).setTag1(automaton.getStates().get(i).getType0());
+                partitions.get(0).setTag1(automaton.getStates().get(i).getType0());// Estos dos taggs dependen del output
                 partitions.get(0).setTag2(automaton.getStates().get(i).getType1());
                 //partitions.get(0).setTag(1);
             }else{
-                for(int j=0;j<partitions.size();j++){
+                for(int j=0;j<partitions.size();j++){//si la partición no está vacía entonces agrega
+                    //el estado a la partición que pertenece dependiendo de los taggs
                     if(partitions.get(j).getTag1()==automaton.getStates().get(i).getType0() 
                             && partitions.get(j).getTag2()==automaton.getStates().get(i).getType1()){
                         partitions.get(j).addState(automaton.getStates().get(i));
@@ -91,7 +95,7 @@ public class ProyectoFinal {
                         added=true;
                     }
                 }
-                if(added==false){
+                if(added==false){//Si no existe una partición con sus taggs entonces crea una y agrega el estado
                     partitions.add(new Partition().addState(automaton.getStates().get(i)));
                     partitions.get(partitions.size()-1).setTag1(automaton.getStates().get(i).getType0());
                     partitions.get(partitions.size()-1).setTag2(automaton.getStates().get(i).getType1());
@@ -124,7 +128,7 @@ public class ProyectoFinal {
 
         
         while(partitions.size()!=partitionsAux.size()){
-            
+           
         
             added=false;
              for(int i=0;i<partitions.size();i++){//Itera sobre todos las particiones
@@ -138,14 +142,20 @@ public class ProyectoFinal {
                      }
                      else{//sino va a revisar a que parrtición pertenece
                          for(int k=0;k<partitionsAux.size();k++){
-                             //si                          
+                             //si coinciden sus taggs con los de alguna partición
+                             //y ese estado se encontraba en la misma partición de
+                             //las particiones anteriores, entonces se agrega
+                            
                              if(partitionsAux.get(k).getTag1()==findTag(partitions,partitions.get(i).getStates().get(j).getTransition0())
-                                     && partitionsAux.get(k).getTag2()==findTag(partitions,partitions.get(i).getStates().get(j).getTransition1())){
+                                     && partitionsAux.get(k).getTag2()==findTag(partitions,partitions.get(i).getStates().get(j).getTransition1())
+                                     && findTag(partitions,partitions.get(i).getStates().get(j).getName().charAt(0))
+                                     == findTag(partitions,partitionsAux.get(k).getNames().get(0).charAt(0))
+                                     && !added){
                                  partitionsAux.get(k).addState(partitions.get(i).getStates().get(j));
                                  added=true;                             
                              }
                          }
-                         if(!added){
+                         if(!added){//si no se encontró ninguna partición entonces se agrega
                          //crear nueva particion en partitionsAux y agregar tags
                          partitionsAux.add(new Partition().addState(partitions.get(i).getStates().get(j)));
                          //agrega tags a particion
@@ -158,6 +168,8 @@ public class ProyectoFinal {
                  }     
              }
              
+            //si las particion actual fue igual a la anterior significa que
+            //ya se llegó al automata mínimo y termina el loop
              if(partitions.size()==partitionsAux.size()){
                  break;
              }else{
@@ -178,7 +190,7 @@ public class ProyectoFinal {
             iteration++;
         }
         
-        //        System.out.println(partitions.size());
+//        System.out.println(partitions.size());
         Automaton finalAutomaton = new Automaton();
         for(int i=0;i<partitions.size();i++){
             finalAutomaton.addState(partitions.get(i).getStates().get(0));
@@ -188,8 +200,48 @@ public class ProyectoFinal {
         for(int i=0;i<finalAutomaton.getStates().size();i++){
             System.out.println(finalAutomaton.getStates().get(i).toString());
         }
+        
+        State st;
+        BufferedWriter bw = null;
+	FileWriter fw = null;
 
-   
+        try {            
+
+            fw = new FileWriter(RESULT);
+            bw = new BufferedWriter(fw);
+            for(int i=0;i<finalAutomaton.getStates().size();i++){
+                st = finalAutomaton.getStates().get(i);
+                bw.write(st.getTransition0()+"\t"+st.getType0()+"\t"+
+                        st.getTransition1()+"\t"+st.getType1());
+                bw.newLine();
+                //System.out.println(finalAutomaton.getStates().get(i).toString());
+            }
+            
+
+            System.out.println("Done");
+
+        } catch (IOException e) {
+
+                e.printStackTrace();
+
+        } finally {
+
+                try {
+
+                        if (bw != null)
+                                bw.close();
+
+                        if (fw != null)
+                                fw.close();
+
+                } catch (IOException ex) {
+
+                        ex.printStackTrace();
+
+                }
+
+        }
+
          
     }
     

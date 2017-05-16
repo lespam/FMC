@@ -13,8 +13,8 @@ import java.util.List;
  * @author PC
  */
 public class Partition {
-    private List<State> states = new ArrayList();
-    private List<String> names = new ArrayList();
+    private List<State> states = new ArrayList();//Lista de estados
+    private List<String> names = new ArrayList();//Lista de nombres en la partición
     private int tag;
     private int tag1;
     private int tag2;

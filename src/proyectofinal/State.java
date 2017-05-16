@@ -10,14 +10,14 @@ package proyectofinal;
  * @author PC
  */
 public class State {
-    private char transition0;
-    private int type0;
-    private  char transition1;
-    private int type1;
-    private int tag1;
-    private int tag2;
-    private String name;
-    private static int idCounter=65;
+    private char transition0;// Transición bajo input 0
+    private int type0;// 0 si no es de aceptación 1 si es de aceptación con input 0
+    private  char transition1;// Transición bajo input 1
+    private int type1;// 0 si no es de aceptación 1 si es de aceptación con input 0
+    private int tag1;//tag de la partición a la que se mueve bajo 0
+    private int tag2;//tag de la partición a la que se mueve bajo 1
+    private String name;//nombre del abecedario con mayúscula
+    private static int idCounter=65;//id del nombre desde la A a la Z en ASCII
 
     public State(char transition0, int type0, char transition1, int type1) {
         this.transition0 = transition0;
