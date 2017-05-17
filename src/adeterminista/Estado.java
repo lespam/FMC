@@ -42,6 +42,10 @@ public class Estado {
     public void setTipo(int tipo) {
         this.tipo = tipo;
     }
+    
+    public void setNombre(char nombre) {
+        this.nombre = nombre;
+    }
 
     public char getNombre() {
         return nombre;
@@ -59,12 +63,32 @@ public class Estado {
         return this.transicion0.iterator();
     }
     
+    public Estado getTransicion0(int i)
+    {
+        return this.transicion0.get(i);
+    }
+    
+    public Estado getTransicion1(int i)
+    {
+        return this.transicion1.get(i);
+    }
+    
+    public int getNumTransiciones0()
+    {
+        return this.transicion0.size();
+    }
+    
     public void setTransicion1(Estado estado) {
         this.transicion1.add(estado);
     }
     public Iterator<Estado> getTransiciones1()
     {
         return this.transicion1.iterator();
+    }
+    
+    public int getNumTransiciones1()
+    {
+        return this.transicion1.size();
     }
     
     @Override

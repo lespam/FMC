@@ -16,11 +16,14 @@ import java.util.List;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 /**
  *
  * @author LesPam
  */
+
 public class primeraParte {
 
     private static final String FILENAME = "nodeterminista.txt";
@@ -29,10 +32,42 @@ public class primeraParte {
     /**
      * @param args the command line arguments
      */
+    public Queue<Estado> queue = new LinkedList<Estado>();
+    public Map<Integer,Estado> auxilio = new HashMap<Integer,Estado>();
+    
+    public void ponerTransiciones(Estado estado, int tipoTrans, Map<Integer,Estado> subconjunto)
+    {
+        Estado nuevo = new Estado();
+        int numNuevo = nuevo.getNombreEntero();
+        
+        int ceros = estado.getNumTransiciones0();
+        int unos = estado.getNumTransiciones1();
+        
+        Estado aux0 = new Estado();
+        int numAux0 = aux0.getNombreEntero();
+        
+        Estado aux1 = new Estado();
+        int numAux1 = aux1.getNombreEntero();
+        
+        auxilio.putIfAbsent(numAux0, aux0);
+        auxilio.putIfAbsent(numAux1, aux1);
+        auxilio.putIfAbsent(numNuevo, nuevo);
+        auxilio.get(numNuevo).setTransicion0(auxilio.get(numAux0));
+        auxilio.get(numNuevo).setTransicion1(auxilio.get(numAux1));
+        
+        if(ceros>0)
+        {
+            estado.getTransiciones0().forEachRemaining(e->subconjunto.putIfAbsent(e.getNombreEntero(), e));
+        }
+            
+        
+    }
     public static void main(String[] args) {
         // TODO code application logic here
         try {
             FileReader reader = new FileReader(FILENAME);
+            FileWriter writer = new FileWriter(RESULT, false);
+            
             int character;
             
             //Creo el conjunto de estados
@@ -50,7 +85,6 @@ public class primeraParte {
             //int y = Character.getNumericValue(x);
             
             while ((character = reader.read()) != -1) {
-                System.out.println("CHAR: "+character+" Letra: "+(char)character);
                 //caracter especial es el 10 para linfeed
                 //caracter de espacio es el 9
                 //caracter de cero es el 48
@@ -62,74 +96,58 @@ public class primeraParte {
                 {   
                     madre = new Estado();
                     int claveM = madre.getNombreEntero();
-                    System.out.println("clave: "+claveM);//QUITAR
                     estados.putIfAbsent(claveM, madre);
                     hijo = new Estado(0,character);
                     estados.putIfAbsent(hijo.getNombreEntero(), hijo);
                     
                     estados.get(claveM).setTransicion0(estados.get(hijo.getNombreEntero()));
-                    System.out.println(estados.toString());//QUITAR
                 }
                 if(anterior==10)
                 {   
                     tabs = 0;
                     madre = new Estado();
                     int claveM = madre.getNombreEntero();
-                    System.out.println("clave: "+claveM);//QUITAR
                     estados.putIfAbsent(claveM, madre);
                     
                     hijo = new Estado(0,character);
                     estados.putIfAbsent(hijo.getNombreEntero(), hijo);
                     
                     estados.get(claveM).setTransicion0(estados.get(hijo.getNombreEntero()));
-                    System.out.println(estados.toString());//QUITAR
                 }
                 if(anterior==9)
                 {   
                     tabs++;
-                    System.out.println("TABS ES: "+tabs);//QUITAR
-
                     int claveM = madre.getNombreEntero();
                     
                     if(tabs==1){ //significa que asignaremos a los estados si son de aceptación o no
                         final int aceptacion = Character.getNumericValue(character);
-                        estados.get(claveM).getTransiciones0().forEachRemaining(e-> e.setTipo(aceptacion));System.out.println(estados.toString());//QUITAR
+                        estados.get(claveM).getTransiciones0().forEachRemaining(e-> e.setTipo(aceptacion));
 
                     }
                     else if(tabs==2)
                     {
                         hijo = new Estado(0,character);
-                        System.out.println(hijo.getNombreEntero());//QUITAR
-                        System.out.println(estados.containsKey(hijo.getNombreEntero()));//QUITAR
                         estados.putIfAbsent(hijo.getNombreEntero(), hijo);
-                        System.out.println(estados.get(65).toString());//QUITAR
                         estados.get(claveM).setTransicion1(estados.get(hijo.getNombreEntero()));
                     }
                     else if(tabs==3){ //significa que asignaremos a los estados si son de aceptación o no
                         final int aceptacion = Character.getNumericValue(character);
                         estados.get(claveM).getTransiciones1().forEachRemaining(e-> e.setTipo(aceptacion));
                     }
-                    System.out.println(estados.toString());//QUITAR
 
                 }
                 if(anterior==48 || anterior==49)
                 {   
                     //No pasa nada
-                    System.out.println("Entre al 9");//QUITAR
-                    System.out.println(estados.toString());//QUITAR
 
                 }
                 if(anterior==44)
                 {   
                     int claveM = madre.getNombreEntero();
-                    System.out.println("CLAVE: "+claveM);//QUITAR
-                    System.out.println("TABS: "+tabs);//QUITAR
                     if(tabs==0){ //significa que asignaremos a los estados si son de aceptación o no
                         hijo = new Estado(0,character);
-                        System.out.println("hijo: "+hijo.getNombreEntero());//QUITAR
                         
                         estados.putIfAbsent(hijo.getNombreEntero(), hijo);
-                        System.out.println(estados.toString());
                         estados.get(claveM).setTransicion0(estados.get(hijo.getNombreEntero()));
                     }
                     else
@@ -138,16 +156,43 @@ public class primeraParte {
                         estados.putIfAbsent(hijo.getNombreEntero(), hijo);
                         estados.get(claveM).setTransicion1(estados.get(hijo.getNombreEntero()));
                     }
-                    System.out.println(estados.toString());//QUITAR
 
                 }
-        
-                //estados.add(new Estado(0,Integer.valueOf('C')));
                 anterior=character;
             }
             reader.close();
             
-            FileWriter writer = new FileWriter(RESULT, false);
+            Map<Integer, Estado> adetermin = new HashMap<Integer, Estado>();
+            Map<Integer, Estado> subconjunto = new HashMap<Integer, Estado>();
+            Queue<Estado> queue = new LinkedList<Estado>();
+            int cuantos = estados.size();
+            for(int i=65; i<65+cuantos; i++)
+            {
+                System.out.println(i);
+                System.out.println(estados.get(i).toString());
+                queue.add(estados.get(i));
+            }
+            
+            Estado auxiliar = queue.remove();
+            adetermin.putIfAbsent(auxiliar.getNombreEntero(), auxiliar);
+            int ceros = adetermin.get(auxiliar.getNombreEntero()).getNumTransiciones0();
+            int unos = adetermin.get(auxiliar.getNombreEntero()).getNumTransiciones1();
+            if(ceros>1)
+            {
+                for(int i=1; i<=ceros; i++)
+                {
+                    subconjunto.putIfAbsent(auxiliar.getTransicion0(i).getNombreEntero(), auxiliar.getTransicion0(i));
+                }
+                subconjunto.;
+            }
+            else
+                subconjunto.putIfAbsent(auxiliar.getTransicion0(1).getNombreEntero(), auxiliar.getTransicion0(1));
+            
+            
+            //Ahora que tenemos en nuestro conjunto "estados" todos los estados,
+            //comenzamos a pasar de noDet a Det
+            int x = 0;
+            System.out.println(x|0);
             writer.write("Hello World");
             writer.write("\r\n");   // write new line
             writer.write(estados.toString());
