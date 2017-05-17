@@ -6,7 +6,7 @@
 package adeterminista;
 import java.util.HashSet;
 import java.util.Set;
-
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -165,17 +165,66 @@ public class primeraParte {
             }
             reader.close();
             
+                            System.out.println(estados.toString());
+
+            Queue<Estado> queue = new LinkedList<Estado>();
+            Queue<Estado> colaAux = new LinkedList<Estado>();
+            
+            int cuantos = estados.size();
+            int trans0 = 0;
+            int trans1 = 0;
+            for(int i=65; i<65+cuantos; i++)
+            {
+                System.out.println(estados.get(i).toString());
+                queue.add(estados.get(i));
+            }
+            
+            Map<Integer, Estado> adetermin = new HashMap<Integer, Estado>();
+            
+            Estado auxMadre = queue.poll();
+            int contador=1;
+            if(adetermin.containsValue(auxMadre))
+            {
+                //HACER ESTO
+                auxMadre = colaAux.poll();
+            }
+            adetermin.putIfAbsent(contador, auxMadre);
+            
+            trans0 = adetermin.get(contador).getNumTransiciones0();
+            trans1 = adetermin.get(contador).getNumTransiciones0();
+            
+            if(trans0>1)
+            {
+                Estado nuevo= new Estado();
+                for(int i=1; i<contador+1;i++)
+                {
+                    Iterator<Estado> itera = auxMadre.getTransiciones0();
+                    while(itera.hasNext())
+                    {
+                        int auxHijo0 = 0;
+                        int auxHijo1 = 0;
+                        
+                        Estado auxHijo = itera.next();
+                        auxHijo0 = auxHijo.getNumTransiciones0();
+                        auxHijo1 = auxHijo.getNumTransiciones1();
+                        for(int j=0; j<auxHijo0;j++)
+                        {
+                          nuevo.setTransicion0(auxHijo.getTransicion0(j));
+                        }
+                        for(int k=0; k<auxHijo1-1;k++)
+                        {
+                          nuevo.setTransicion1(auxHijo.getTransicion0(k));  
+                        }
+                    }
+                    
+                }
+            }
+            
             /*PRUEBAS DE CODIGO (NO FINAL)
             Map<Integer, Estado> adetermin = new HashMap<Integer, Estado>();
             Map<Integer, Estado> subconjunto = new HashMap<Integer, Estado>();
             Queue<Estado> queue = new LinkedList<Estado>();
-            int cuantos = estados.size();
-            for(int i=65; i<65+cuantos; i++)
-            {
-                System.out.println(i);
-                System.out.println(estados.get(i).toString());
-                queue.add(estados.get(i));
-            }
+            
             
             Estado auxiliar = queue.remove();
             adetermin.putIfAbsent(auxiliar.getNombreEntero(), auxiliar);

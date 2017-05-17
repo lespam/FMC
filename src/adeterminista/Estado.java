@@ -18,12 +18,12 @@ public class Estado {
     private List<Estado> transicion0;
     private List<Estado> transicion1;
     private int tipo;
-    private char nombre;
+    private List<Character> nombre;
     private static int idCounter=65;
 
     public Estado(int tipo,int letra) {
         this.tipo = tipo;
-        this.nombre = (char)letra;
+        this.nombre.add((char)letra);
         this.transicion0 = new ArrayList<Estado>();
         this.transicion1 = new ArrayList<Estado>();
     }
@@ -31,7 +31,7 @@ public class Estado {
         this.tipo = 0;
         this.transicion0 = new ArrayList<Estado>();
         this.transicion1 = new ArrayList<Estado>();
-        this.nombre = ((char)idCounter);
+        this.nombre.add((char)idCounter);
         idCounter++;
     }
 
@@ -43,16 +43,16 @@ public class Estado {
         this.tipo = tipo;
     }
     
-    public void setNombre(char nombre) {
-        this.nombre = nombre;
+    public void addNombre(char nombre) {
+        this.nombre.add(nombre);
     }
 
-    public char getNombre() {
+    public List<Character> getNombre() {
         return nombre;
     }
 
     public Integer getNombreEntero() {
-        return Integer.valueOf(nombre);
+        return Integer.valueOf(nombre.get(0));
     }
 
     public void setTransicion0(Estado estado) {
@@ -94,7 +94,7 @@ public class Estado {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {   return false;  }
-        if(Integer.valueOf(this.nombre) == Integer.valueOf(((Estado)obj).nombre))
+        if(Integer.valueOf(this.getNombreEntero()) == Integer.valueOf(((Estado)obj).getNombreEntero()))
             return true;
         else 
             return false;
