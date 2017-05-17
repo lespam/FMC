@@ -247,7 +247,7 @@ public class ProyectoFinal {
                 }
             }
         }
-
+        expresionLambda.setExpresion(expresionLambda.getExpresion().replaceAll("[a-zA-Z]", ""));
         System.out.println("-------------");
         System.out.println("EXPRESION REGULAR");
         System.out.println(expresionLambda.getExpresion());
