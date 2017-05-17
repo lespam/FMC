@@ -238,8 +238,10 @@ public class ProyectoFinal {
             for(int i=0; i < expresionesDependientes.size(); i++){
                 if(expresionesDependientes.get(i).getExpresion().contains(expresionLambda.getEstado())){
                     System.out.println("SE encontro el estado en la expresion de:"+expresionesDependientes.get(i).getEstado());
+                    System.out.println("Se aplica estrella de Kleene");
                     expresionLambda.setExpresion(expresionesDependientes.get(i).getExpresion().replace(expresionLambda.getEstado(),"("+expresionLambda.getExpresion()+")"));
                     expresionLambda.setEstado(expresionesDependientes.get(i).getEstado());
+                    expresionLambda.setExpresion(expresionLambda.getExpresion().replace(expresionesDependientes.get(i).getEstado(),""));
                     System.out.println("SE reemplazo por:"+expresionLambda.getExpresion());
                     expresionesDependientes.remove(i);
                 }
