@@ -201,6 +201,50 @@ public class ProyectoFinal {
             System.out.println(finalAutomaton.getStates().get(i).toString());
         }
         
+        
+        System.out.println("-------------");
+        // Este codigo asume que en el automata result.txt hay un estado de aceptacion y que 
+        // el automata es minimizado y deterministico.
+        System.out.println("Expresión regular de autómata. ");
+        System.out.println("Ecuaciones recursivas desde lambda: ");
+        RegExpression expresionLambda = null;
+        List<RegExpression> expresionesDependientes = new ArrayList<RegExpression>();
+        
+        for(int i=0; i < finalAutomaton.getStates().size(); i++){//Encuentra expresion lambda para estado de aceptacion.
+            if(finalAutomaton.getStates().get(i).getType0()==1){
+                expresionLambda = new RegExpression(""+finalAutomaton.getStates().get(i).getTransition0(),"(1+0)");
+            }
+            if(finalAutomaton.getStates().get(i).getType1()==1){
+                expresionLambda = new RegExpression(""+finalAutomaton.getStates().get(i).getTransition1(),"(1+0)");
+            }
+            expresionesDependientes.add(new RegExpression(finalAutomaton.getStates().get(i).getName()
+                                                            ,"0"+finalAutomaton.getStates().get(i).getTransition0()+" + "+
+                                                            "1"+finalAutomaton.getStates().get(i).getTransition1()));
+            System.out.println(expresionesDependientes.get(i).toString());
+        }
+        System.out.println(expresionLambda.toString()+"λ");
+        
+        // Con estado de aceptación aplica Estrella de Kleene para despejar estados subsecuentes
+        // y crear ecuación para expresión regular del autómata.
+        
+        for(int j=0; j < finalAutomaton.getStates().size(); j++){
+            for(int i=0; i < expresionesDependientes.size(); i++){
+                if(expresionesDependientes.get(i).getExpresion().contains(expresionLambda.getEstado())){
+                    System.out.println("SE encontro el estado en la expresion de:"+expresionesDependientes.get(i).getEstado());
+                    expresionLambda.setExpresion(expresionesDependientes.get(i).getExpresion().replace(expresionLambda.getEstado(),"("+expresionLambda.getExpresion()+")"));
+                    expresionLambda.setEstado(expresionesDependientes.get(i).getEstado());
+                    System.out.println("SE reemplazo por:"+expresionLambda.getExpresion());
+                    expresionesDependientes.remove(i);
+                }
+            }
+        }
+
+        System.out.println("-------------");
+        System.out.println("EXPRESION REGULAR");
+        System.out.println(expresionLambda.getExpresion());
+        System.out.println("-------------");
+        
+        
         State st;
         BufferedWriter bw = null;
 	FileWriter fw = null;
