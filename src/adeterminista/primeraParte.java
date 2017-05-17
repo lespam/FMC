@@ -46,9 +46,11 @@ public class primeraParte {
             
             int anterior=0;            
             int tabs=0;
+
+            //int y = Character.getNumericValue(x);
             
             while ((character = reader.read()) != -1) {
-                System.out.println("Caracter: "+character);
+                System.out.println("CHAR: "+character+" Letra: "+(char)character);
                 //caracter especial es el 10 para linfeed
                 //caracter de espacio es el 9
                 //caracter de cero es el 48
@@ -61,10 +63,9 @@ public class primeraParte {
                     madre = new Estado();
                     int claveM = madre.getNombreEntero();
                     System.out.println("clave: "+claveM);//QUITAR
-                    estados.put(claveM, madre);
-                    
+                    estados.putIfAbsent(claveM, madre);
                     hijo = new Estado(0,character);
-                    estados.put(hijo.getNombreEntero(), hijo);
+                    estados.putIfAbsent(hijo.getNombreEntero(), hijo);
                     
                     estados.get(claveM).setTransicion0(estados.get(hijo.getNombreEntero()));
                     System.out.println(estados.toString());//QUITAR
@@ -75,10 +76,10 @@ public class primeraParte {
                     madre = new Estado();
                     int claveM = madre.getNombreEntero();
                     System.out.println("clave: "+claveM);//QUITAR
-                    estados.put(claveM, madre);
+                    estados.putIfAbsent(claveM, madre);
                     
                     hijo = new Estado(0,character);
-                    estados.put(hijo.getNombreEntero(), hijo);
+                    estados.putIfAbsent(hijo.getNombreEntero(), hijo);
                     
                     estados.get(claveM).setTransicion0(estados.get(hijo.getNombreEntero()));
                     System.out.println(estados.toString());//QUITAR
@@ -86,26 +87,37 @@ public class primeraParte {
                 if(anterior==9)
                 {   
                     tabs++;
+                    System.out.println("TABS ES: "+tabs);//QUITAR
+
                     int claveM = madre.getNombreEntero();
                     
                     if(tabs==1){ //significa que asignaremos a los estados si son de aceptación o no
-                        final int aceptacion = Integer.valueOf((char)character);
-                        estados.get(claveM).getTransiciones0().forEachRemaining(e-> e.setTipo(aceptacion));
+                        final int aceptacion = Character.getNumericValue(character);
+                        estados.get(claveM).getTransiciones0().forEachRemaining(e-> e.setTipo(aceptacion));System.out.println(estados.toString());//QUITAR
+
                     }
                     else if(tabs==2)
                     {
                         hijo = new Estado(0,character);
-                        estados.put(hijo.getNombreEntero(), hijo);
+                        System.out.println(hijo.getNombreEntero());//QUITAR
+                        System.out.println(estados.containsKey(hijo.getNombreEntero()));//QUITAR
+                        estados.putIfAbsent(hijo.getNombreEntero(), hijo);
+                        System.out.println(estados.get(65).toString());//QUITAR
                         estados.get(claveM).setTransicion1(estados.get(hijo.getNombreEntero()));
                     }
                     else if(tabs==3){ //significa que asignaremos a los estados si son de aceptación o no
-                        final int aceptacion = Integer.valueOf((char)character);
+                        final int aceptacion = Character.getNumericValue(character);
                         estados.get(claveM).getTransiciones1().forEachRemaining(e-> e.setTipo(aceptacion));
                     }
+                    System.out.println(estados.toString());//QUITAR
+
                 }
                 if(anterior==48 || anterior==49)
                 {   
                     //No pasa nada
+                    System.out.println("Entre al 9");//QUITAR
+                    System.out.println(estados.toString());//QUITAR
+
                 }
                 if(anterior==44)
                 {   
@@ -116,16 +128,18 @@ public class primeraParte {
                         hijo = new Estado(0,character);
                         System.out.println("hijo: "+hijo.getNombreEntero());//QUITAR
                         
-                        estados.put(hijo.getNombreEntero(), hijo);
+                        estados.putIfAbsent(hijo.getNombreEntero(), hijo);
                         System.out.println(estados.toString());
                         estados.get(claveM).setTransicion0(estados.get(hijo.getNombreEntero()));
                     }
                     else
                     {
                         hijo = new Estado(0,character);
-                        estados.put(hijo.getNombreEntero(), hijo);
+                        estados.putIfAbsent(hijo.getNombreEntero(), hijo);
                         estados.get(claveM).setTransicion1(estados.get(hijo.getNombreEntero()));
                     }
+                    System.out.println(estados.toString());//QUITAR
+
                 }
         
                 //estados.add(new Estado(0,Integer.valueOf('C')));

@@ -60,7 +60,7 @@ public class Estado {
     }
     
     public void setTransicion1(Estado estado) {
-        this.transicion0.add(estado);
+        this.transicion1.add(estado);
     }
     public Iterator<Estado> getTransiciones1()
     {
