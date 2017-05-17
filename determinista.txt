@@ -1,8 +1,2 @@
 Hello World
-Good Bye!Hello World
-Good Bye!Hello World
-Good Bye!Hello World
-Good Bye!Hello World
-Good Bye!Hello World
-Good Bye!Hello World
-Good Bye!
+{65=Estado A {Transiciones0= 0, Transiciones1= 0, Tipo=0, 66=Estado B {Transiciones0= 0, Transiciones1= 0, Tipo=0, 67=Estado C {Transiciones0= 2, Transiciones1= 0, Tipo=0, 68=Estado D {Transiciones0= 0, Transiciones1= 0, Tipo=48, 69=Estado E {Transiciones0= 0, Transiciones1= 0, Tipo=48, 70=Estado F {Transiciones0= 2, Transiciones1= 0, Tipo=0, 71=Estado G {Transiciones0= 1, Transiciones1= 0, Tipo=0}
