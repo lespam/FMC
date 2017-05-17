@@ -32,6 +32,8 @@ public class primeraParte {
     /**
      * @param args the command line arguments
      */
+    /*
+    //PRUEBAS DE CODIGO (NO FINAL)
     public Queue<Estado> queue = new LinkedList<Estado>();
     public Map<Integer,Estado> auxilio = new HashMap<Integer,Estado>();
     
@@ -62,6 +64,7 @@ public class primeraParte {
             
         
     }
+    */
     public static void main(String[] args) {
         // TODO code application logic here
         try {
@@ -162,6 +165,7 @@ public class primeraParte {
             }
             reader.close();
             
+            /*PRUEBAS DE CODIGO (NO FINAL)
             Map<Integer, Estado> adetermin = new HashMap<Integer, Estado>();
             Map<Integer, Estado> subconjunto = new HashMap<Integer, Estado>();
             Queue<Estado> queue = new LinkedList<Estado>();
@@ -188,11 +192,12 @@ public class primeraParte {
             else
                 subconjunto.putIfAbsent(auxiliar.getTransicion0(1).getNombreEntero(), auxiliar.getTransicion0(1));
             
+            */
             
             //Ahora que tenemos en nuestro conjunto "estados" todos los estados,
             //comenzamos a pasar de noDet a Det
-            int x = 0;
-            System.out.println(x|0);
+
+            
             writer.write("Hello World");
             writer.write("\r\n");   // write new line
             writer.write(estados.toString());
