@@ -48,7 +48,8 @@ public class ProyectoFinal {
         Automaton automaton = new Automaton();
         List<Partition> partitions = new ArrayList<Partition>();
         List<Partition> partitionsAux = new ArrayList<Partition>();
-
+        
+        //Lee el archivo de texto
 	try {
 
             fr = new FileReader(FILENAME);
@@ -59,8 +60,9 @@ public class ProyectoFinal {
             br = new BufferedReader(new FileReader(FILENAME));
 
             while ((sCurrentLine = br.readLine()) != null) {
-                    //System.out.println(sCurrentLine);
+                    //Lee línea por línea y los separa por cada tab
                     String[] split=sCurrentLine.split("\t");
+                    //Crea el autómata 
                     automaton.getStates().add(new State(split[0].charAt(0),Integer.parseInt(split[1]),split[2].charAt(0),Integer.parseInt(split[3])));
             }
 
@@ -91,7 +93,6 @@ public class ProyectoFinal {
                     if(partitions.get(j).getTag1()==automaton.getStates().get(i).getType0() 
                             && partitions.get(j).getTag2()==automaton.getStates().get(i).getType1()){
                         partitions.get(j).addState(automaton.getStates().get(i));
-                        // partitions.get(partitions.size()-1).setTag(partitions.size());
                         added=true;
                     }
                 }
@@ -99,16 +100,11 @@ public class ProyectoFinal {
                     partitions.add(new Partition().addState(automaton.getStates().get(i)));
                     partitions.get(partitions.size()-1).setTag1(automaton.getStates().get(i).getType0());
                     partitions.get(partitions.size()-1).setTag2(automaton.getStates().get(i).getType1());
-                    //partitions.get(partitions.size()-1).setTag(partitions.size());
                 }
                 added=false;
             }          
         }
 
-//        for(int i=0;i<automaton.getStates().size();i++){
-//            System.out.println(automaton.getStates().get(i).toString());
-//        }
-////
         System.out.println("Iteration: "+iteration);
         iteration++;
         for(int i=0;i<partitions.size();i++){
@@ -116,17 +112,10 @@ public class ProyectoFinal {
             for(int j=0;j<partitions.get(i).getNames().size();j++){
                 System.out.println(partitions.get(i).getNames().get(j));
             }
-        }
+        }     
         
-//        System.out.println(partitions.size());
-//        for(int i=0;i<partitions.size();i++){
-//            System.out.println(partitions.get(i).getTag1());
-//            System.out.println(partitions.get(i).getTag2());
-//            System.out.println(partitions.get(i).getStates().size());
-//        }
-
-
-        
+        //Mientras la partición actual y la partición anterior sean de
+        //Distinto tamaño entonces sigue iterando
         while(partitions.size()!=partitionsAux.size()){
            
         
@@ -173,12 +162,11 @@ public class ProyectoFinal {
              if(partitions.size()==partitionsAux.size()){
                  break;
              }else{
+                 //En caso contrario se limpia la partición anterior
+                 //Y se establece la partición anterior como la actual
                     partitions.clear();
-                    //System.out.println(partitions.size());
                     partitions.addAll(partitionsAux);
-                    //System.out.println(partitions.size());
                     partitionsAux.clear();
-                   // System.out.println(partitionsAux.isEmpty()); 
              }
             System.out.println("Iteration: "+iteration);
             for(int i=0;i<partitions.size();i++){
@@ -190,13 +178,32 @@ public class ProyectoFinal {
             iteration++;
         }
         
-//        System.out.println(partitions.size());
+//      Crea el autómata mínimo con base en las particiones
         Automaton finalAutomaton = new Automaton();
         for(int i=0;i<partitions.size();i++){
             finalAutomaton.addState(partitions.get(i).getStates().get(0));
         }
         
         System.out.println("Automata final: ");        
+        for(int i=0;i<finalAutomaton.getStates().size();i++){
+            System.out.println(finalAutomaton.getStates().get(i).toString());
+        }
+        
+        //Reenombra las transiciones del autómata con base en las particiones
+        //Tomando la primer transición como el estado A, el segundo como el B
+        //y así sucesivamente
+        char trans0, trans1;
+        int tran0,tran1;
+         for(int i=0;i<finalAutomaton.getStates().size();i++){
+            trans0= finalAutomaton.getStates().get(i).getTransition0();
+            trans1=finalAutomaton.getStates().get(i).getTransition1();            
+            tran0=findTag(partitions,trans0)+65;
+            tran1=findTag(partitions,trans1)+65;
+            finalAutomaton.getStates().get(i).setTransition0((String.valueOf((char)tran0)).charAt(0));
+            finalAutomaton.getStates().get(i).setTransition1((String.valueOf((char)tran1)).charAt(0));
+        }
+         
+        System.out.println("Automata final 2: ");        
         for(int i=0;i<finalAutomaton.getStates().size();i++){
             System.out.println(finalAutomaton.getStates().get(i).toString());
         }
