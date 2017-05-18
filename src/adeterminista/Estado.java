@@ -13,7 +13,7 @@ public class Estado {
     public List<Estado> transicion0;
     public List<Estado> transicion1;
     private int tipo;
-    private List<Character> nombre;
+    public List<Character> nombre;
     private static int idCounter=65;
 
     public Estado(int tipo,int letra) {
@@ -95,7 +95,14 @@ public class Estado {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {   return false;  }
-        return this.nombre.containsAll(((Estado)obj).nombre);
+        if(this.nombre.containsAll(((Estado)obj).getNombre())){
+            if(this.nombre.size()==((Estado)obj).nombre.size())
+                return true;
+            else
+                return false;
+        }
+        else 
+            return false;
     }
 
     @Override

@@ -178,10 +178,10 @@ public class primeraParte {
             int contador=1;
             colaAux.add(auxMadre);
             
+            
             while(!colaAux.isEmpty()){
                 System.out.println("COLA: "+colaAux.peek().toString());
                 System.out.println("ENTRO AL WHILE");
-                System.out.println(adetermin.toString());
                 if(adetermin.containsValue(colaAux.peek()))
                 {
                     colaAux.poll();
@@ -191,6 +191,8 @@ public class primeraParte {
                 else
                 {          
                     auxMadre = colaAux.poll();
+                    System.out.println("TRANS0 "+auxMadre.transicion0.toString());
+                    System.out.println("TRANS1 "+auxMadre.transicion1.toString());
                     adetermin.putIfAbsent(contador, auxMadre);
                     System.out.println("elemento "+contador+": "+adetermin.get(contador).toString());
                     trans0 = adetermin.get(contador).getNumTransiciones0();
@@ -201,6 +203,7 @@ public class primeraParte {
                         int auxTipo=auxMadre.getTipo();
                         List<Estado> a0 = new ArrayList<>();
                         List<Estado> a1 = new ArrayList<>();
+                        List<Character> nom = new ArrayList<>();
                         for(int i=0; i<trans0;i++)
                         {
                             int car = auxMadre.getTransicion0(i).getNombreEntero();
@@ -208,12 +211,19 @@ public class primeraParte {
                             a0.addAll(auxMadre.getTransicion0(i).transicion0);
                             a1.addAll(auxMadre.getTransicion0(i).transicion1);
                             // add elements to al, including duplicates
-                            
-                            if(i==0)
-                                nuevo.setNombre((char)car, i);
+                            if(i==0){
+                                nuevo.nombre.clear();
+                                nuevo.nombre.addAll(auxMadre.getTransicion0(0).nombre);}
                             else
                                 nuevo.addNombre((char)car);
                         }
+                        nom.addAll(nuevo.nombre);
+                        Set<Character> hnom = new HashSet<>();
+                        hnom.addAll(nom);
+                        nom.clear();
+                        nom.addAll(hnom);
+                        nuevo.nombre.clear();
+                        nuevo.nombre.addAll(nom);
                         Set<Estado> hs = new HashSet<>();
                         hs.addAll(a0);
                         a0.clear();
@@ -237,6 +247,7 @@ public class primeraParte {
                         int auxTipo=auxMadre.getTipo();
                         List<Estado> a0 = new ArrayList<>();
                         List<Estado> a1 = new ArrayList<>();
+                        List<Character> nom = new ArrayList<>();
                         for(int i=0; i<trans1;i++)
                         {
                             int car = auxMadre.getTransicion1(i).getNombreEntero();
@@ -244,11 +255,19 @@ public class primeraParte {
                             a0.addAll(auxMadre.getTransicion1(i).transicion0);
                             a1.addAll(auxMadre.getTransicion1(i).transicion1);
                             // add elements to al, including duplicates
-                            if(i==0)
-                                nuevo.setNombre((char)car, i);
+                            if(i==0){
+                                nuevo.nombre.clear();
+                                nuevo.nombre.addAll(auxMadre.getTransicion1(0).nombre);}
                             else
                                 nuevo.addNombre((char)car);
                         }
+                        nom.addAll(nuevo.nombre);
+                        Set<Character> hnom = new HashSet<>();
+                        hnom.addAll(nom);
+                        nom.clear();
+                        nom.addAll(hnom);
+                        nuevo.nombre.clear();
+                        nuevo.nombre.addAll(nom);
                         Set<Estado> hs = new HashSet<>();
                         hs.addAll(a0);
                         a0.clear();
@@ -269,7 +288,13 @@ public class primeraParte {
                     contador++;
                 }
             }
-            
+            int[] x = {1,2,3,5,8};
+            for(int l=0; l<x.length;l++)
+            {
+                System.out.println("Estado "+l+": "+adetermin.get(x[l]));
+                System.out.println("   T0 "+adetermin.get(x[l]).transicion0.toString());
+                System.out.println("   T1 "+adetermin.get(x[l]).transicion1.toString());
+            }
             
             
             
