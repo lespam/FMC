@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package adeterminista;
 import java.util.HashSet;
 import java.util.Set;
@@ -164,8 +159,7 @@ public class primeraParte {
                 anterior=character;
             }
             reader.close();
-            
-                            System.out.println(estados.toString());
+            System.out.println(estados.toString());
 
             Queue<Estado> queue = new LinkedList<Estado>();
             Queue<Estado> colaAux = new LinkedList<Estado>();
@@ -180,45 +174,106 @@ public class primeraParte {
             }
             
             Map<Integer, Estado> adetermin = new HashMap<Integer, Estado>();
-            
             Estado auxMadre = queue.poll();
             int contador=1;
-            if(adetermin.containsValue(auxMadre))
-            {
-                //HACER ESTO
-                auxMadre = colaAux.poll();
-            }
-            adetermin.putIfAbsent(contador, auxMadre);
+            colaAux.add(auxMadre);
             
-            trans0 = adetermin.get(contador).getNumTransiciones0();
-            trans1 = adetermin.get(contador).getNumTransiciones0();
-            
-            if(trans0>1)
-            {
-                Estado nuevo= new Estado();
-                for(int i=1; i<contador+1;i++)
+            while(!colaAux.isEmpty()){
+                System.out.println("COLA: "+colaAux.peek().toString());
+                System.out.println("ENTRO AL WHILE");
+                System.out.println(adetermin.toString());
+                if(adetermin.containsValue(colaAux.peek()))
                 {
-                    Iterator<Estado> itera = auxMadre.getTransiciones0();
-                    while(itera.hasNext())
+                    colaAux.poll();
+                    System.out.println("Ya lo había metido");
+                    contador++;
+                }
+                else
+                {          
+                    auxMadre = colaAux.poll();
+                    adetermin.putIfAbsent(contador, auxMadre);
+                    System.out.println("elemento "+contador+": "+adetermin.get(contador).toString());
+                    trans0 = adetermin.get(contador).getNumTransiciones0();
+                    trans1 = adetermin.get(contador).getNumTransiciones1();
+                    if(trans0>1)
                     {
-                        int auxHijo0 = 0;
-                        int auxHijo1 = 0;
-                        
-                        Estado auxHijo = itera.next();
-                        auxHijo0 = auxHijo.getNumTransiciones0();
-                        auxHijo1 = auxHijo.getNumTransiciones1();
-                        for(int j=0; j<auxHijo0;j++)
+                        Estado nuevo= new Estado();
+                        int auxTipo=auxMadre.getTipo();
+                        List<Estado> a0 = new ArrayList<>();
+                        List<Estado> a1 = new ArrayList<>();
+                        for(int i=0; i<trans0;i++)
                         {
-                          nuevo.setTransicion0(auxHijo.getTransicion0(j));
+                            int car = auxMadre.getTransicion0(i).getNombreEntero();
+                            auxTipo = auxTipo|auxMadre.getTransicion0(i).getTipo();
+                            a0.addAll(auxMadre.getTransicion0(i).transicion0);
+                            a1.addAll(auxMadre.getTransicion0(i).transicion1);
+                            // add elements to al, including duplicates
+                            
+                            if(i==0)
+                                nuevo.setNombre((char)car, i);
+                            else
+                                nuevo.addNombre((char)car);
                         }
-                        for(int k=0; k<auxHijo1-1;k++)
-                        {
-                          nuevo.setTransicion1(auxHijo.getTransicion0(k));  
-                        }
+                        Set<Estado> hs = new HashSet<>();
+                        hs.addAll(a0);
+                        a0.clear();
+                        a0.addAll(hs);
+                        nuevo.transicion0.addAll(a0);
+                        nuevo.transicion1.addAll(a1);
+                        nuevo.setTipo(auxTipo);
+                        colaAux.add(nuevo);
+                        adetermin.get(contador).transicion0.clear();
+                        adetermin.get(contador).setTransicion0(nuevo);
+                        System.out.println("Transiciones 0: "+adetermin.get(1).transicion0.toString());
                     }
-                    
+                    else
+                    {
+                        colaAux.add(auxMadre.getTransicion0(0));
+                        System.out.println("Lo que agregó: "+auxMadre.getTransicion0(0).toString());
+                    }
+                    if(trans1>1)
+                    {
+                        Estado nuevo= new Estado();
+                        int auxTipo=auxMadre.getTipo();
+                        List<Estado> a0 = new ArrayList<>();
+                        List<Estado> a1 = new ArrayList<>();
+                        for(int i=0; i<trans1;i++)
+                        {
+                            int car = auxMadre.getTransicion1(i).getNombreEntero();
+                            auxTipo = auxTipo|auxMadre.getTransicion1(i).getTipo();
+                            a0.addAll(auxMadre.getTransicion1(i).transicion0);
+                            a1.addAll(auxMadre.getTransicion1(i).transicion1);
+                            // add elements to al, including duplicates
+                            if(i==0)
+                                nuevo.setNombre((char)car, i);
+                            else
+                                nuevo.addNombre((char)car);
+                        }
+                        Set<Estado> hs = new HashSet<>();
+                        hs.addAll(a0);
+                        a0.clear();
+                        a0.addAll(hs);
+                        nuevo.transicion0.addAll(a0);
+                        nuevo.transicion1.addAll(a1);
+                        nuevo.setTipo(auxTipo);
+                        colaAux.add(nuevo);
+                        adetermin.get(contador).transicion1.clear();
+                        adetermin.get(contador).setTransicion0(nuevo);
+                        System.out.println("Transiciones 1: "+adetermin.get(1).transicion1.toString());
+                    }
+                    else
+                    {
+                        colaAux.add(auxMadre.getTransicion1(0));
+                        System.out.println(adetermin.get(1).transicion1.toString());
+                    }
+                    contador++;
                 }
             }
+            
+            
+            
+            
+            
             
             /*PRUEBAS DE CODIGO (NO FINAL)
             Map<Integer, Estado> adetermin = new HashMap<Integer, Estado>();
@@ -254,9 +309,6 @@ public class primeraParte {
  
         } catch (IOException e) {
             e.printStackTrace();
-        }     
-        
-        
+        }
     }
-    
 }

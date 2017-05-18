@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package adeterminista;
 
 import java.util.ArrayList;
@@ -15,20 +10,22 @@ import java.util.Objects;
  * @author LesPam
  */
 public class Estado {
-    private List<Estado> transicion0;
-    private List<Estado> transicion1;
+    public List<Estado> transicion0;
+    public List<Estado> transicion1;
     private int tipo;
     private List<Character> nombre;
     private static int idCounter=65;
 
     public Estado(int tipo,int letra) {
         this.tipo = tipo;
+        this.nombre = new ArrayList<Character>();
         this.nombre.add((char)letra);
         this.transicion0 = new ArrayList<Estado>();
         this.transicion1 = new ArrayList<Estado>();
     }
     public Estado() {
         this.tipo = 0;
+        this.nombre = new ArrayList<Character>();
         this.transicion0 = new ArrayList<Estado>();
         this.transicion1 = new ArrayList<Estado>();
         this.nombre.add((char)idCounter);
@@ -45,6 +42,10 @@ public class Estado {
     
     public void addNombre(char nombre) {
         this.nombre.add(nombre);
+    }
+    
+        public void setNombre(char nombre, int i) {
+        this.nombre.set(i, nombre);
     }
 
     public List<Character> getNombre() {
@@ -94,10 +95,7 @@ public class Estado {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {   return false;  }
-        if(Integer.valueOf(this.getNombreEntero()) == Integer.valueOf(((Estado)obj).getNombreEntero()))
-            return true;
-        else 
-            return false;
+        return this.nombre.containsAll(((Estado)obj).nombre);
     }
 
     @Override
@@ -109,7 +107,7 @@ public class Estado {
     
     @Override
     public String toString() {
-        return "Estado " +nombre+ " {Transiciones0= " + transicion0.size() + ", Transiciones1= " + transicion1.size()+ ", Tipo=" + tipo;
+        return "Estado " +nombre.toString()+ " {Transiciones0= " + transicion0.size() + ", Transiciones1= " + transicion1.size()+ ", Tipo=" + tipo;
     }
     
     
