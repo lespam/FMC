@@ -241,13 +241,13 @@ public class ProyectoFinal {
                     System.out.println("Se aplica estrella de Kleene");
                     expresionLambda.setExpresion(expresionesDependientes.get(i).getExpresion().replace(expresionLambda.getEstado(),"("+expresionLambda.getExpresion()+")"));
                     expresionLambda.setEstado(expresionesDependientes.get(i).getEstado());
-                    expresionLambda.setExpresion(expresionLambda.getExpresion().replace(expresionesDependientes.get(i).getEstado(),""));
+                    expresionLambda.setExpresion(expresionLambda.getExpresion().replace(expresionesDependientes.get(i).getEstado(),"*"));
                     System.out.println("SE reemplazo por:"+expresionLambda.getExpresion());
                     expresionesDependientes.remove(i);
                 }
             }
         }
-
+        expresionLambda.setExpresion(expresionLambda.getExpresion().replaceAll("[a-zA-Z]", "*"));
         System.out.println("-------------");
         System.out.println("EXPRESION REGULAR");
         System.out.println(expresionLambda.getExpresion());
